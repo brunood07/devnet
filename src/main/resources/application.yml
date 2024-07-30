@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: 'social-network'
+  flyway:
+    enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/social-network-db?user=admin&password=admin&createDatabaseIfNotExist=true
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        globally_quoted_identifiers: 'true'
+        format_sql: 'true'
+        default_schema: social_network
+    show-sql: 'false'
+    database-platform: 'org.hibernate.dialect.PostgreSQLDialect'
+    hibernate:
+      ddl-auto: update
+security:
+  token:
+    secret: 'testesecret'
+
+server:
+  port: 8080
+  address: 0.0.0.0
