@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: 'social-network'
+  flyway:
+    enabled: true
+  datasource:
+    url: jdbc:h2:mem:test
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        globally_quoted_identifiers: 'true'
+        format_sql: 'true'
+        default_schema: social_network
+    show-sql: 'false'
+    database-platform: 'org.hibernate.dialect.H2Dialect'
+    hibernate:
+      ddl-auto: create-drop
+security:
+  token:
+    secret: 'abcd'
+
+server:
+  port: 8080

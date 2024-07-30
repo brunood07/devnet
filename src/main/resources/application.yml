@@ -18,7 +18,7 @@ spring:
       ddl-auto: update
 security:
   token:
-    secret: 'testesecret'
+    secret: '49c00d9a99ea63fdf270f6ca042f682a'
 
 server:
   port: 8080
