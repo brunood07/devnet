@@ -2,8 +2,8 @@ CREATE SCHEMA IF NOT EXISTS social_network;
 
 CREATE TABLE social_network.tb_users (
     id BIGSERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
     birth_day_date DATE,
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN,

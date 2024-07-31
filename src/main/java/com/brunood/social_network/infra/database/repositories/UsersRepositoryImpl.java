@@ -20,16 +20,27 @@ public class UsersRepositoryImpl implements UsersRepository {
     public User createUser(CreateUserDTO data) {
         return this.jpaUsersRepository.save(
                 User.builder()
-                    .email(data.getEmail())
-                    .isActive(true)
-                    .password(data.getPassword())
-                    .username(data.getUsername())
-                    .build()
+                        .email(data.getEmail())
+                        .isActive(true)
+                        .birthDayDate(data.getBirthDayDate())
+                        .password(data.getPassword())
+                        .username(data.getUsername())
+                        .build()
         );
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
         return this.jpaUsersRepository.findFirstByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return this.jpaUsersRepository.findByIdAndIsActiveTrue(id);
+    }
+
+    @Override
+    public User update(User data) {
+        return this.jpaUsersRepository.save(data);
     }
 }

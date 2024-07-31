@@ -40,7 +40,7 @@ public class AuthenticateUserUseCase {
         var token = JWT.create()
                 .withIssuer("devnet")
                 .withExpiresAt(expiresIn)
-                .withSubject(user.getUsername())
+                .withSubject(user.getId().toString())
                 .withClaim("roles", List.of("USER"))
                 .sign(algorithm);
 

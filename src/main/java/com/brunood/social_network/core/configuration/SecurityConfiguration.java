@@ -29,6 +29,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/api/v1/client/auth").permitAll()
                             .requestMatchers("/user").permitAll()
                             .requestMatchers("/user/session").permitAll()
+                            .requestMatchers("/user/me").permitAll()
                             .requestMatchers(SWAGGER_LIST).permitAll();
                     auth.anyRequest().authenticated();
                 })
