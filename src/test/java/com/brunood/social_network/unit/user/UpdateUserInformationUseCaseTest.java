@@ -1,9 +1,10 @@
 package com.brunood.social_network.unit.user;
 
 import com.brunood.social_network.core.exception.custom.RecordNotFoundException;
+import com.brunood.social_network.domain.user.application.dtos.UpdateUserInformationRequestDTO;
 import com.brunood.social_network.domain.user.application.dtos.UserInformationDTO;
 import com.brunood.social_network.domain.user.application.repositories.UsersRepository;
-import com.brunood.social_network.domain.user.application.usecases.GetUserInformationUseCase;
+import com.brunood.social_network.domain.user.application.usecases.UpdateUserInformationUseCase;
 import com.brunood.social_network.infra.database.entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,20 +15,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GetUserInformationUseCaseTest {
+public class UpdateUserInformationUseCaseTest {
 
     @Mock
     private UsersRepository usersRepository;
     @InjectMocks
-    private GetUserInformationUseCase getUserInformationUseCase;
+    private UpdateUserInformationUseCase updateUserInformationUseCase;
 
     @Test
-    void givenValidId_whenGetUserInformationUseCase_thenReturnUserInfo() {
+    void givenValidParameters_whenUpdateUserInformation_thenReturnUpdatedUser() {
         when(usersRepository.findById(anyLong())).thenReturn(Optional.of(
                 User.builder()
                         .birthDayDate(LocalDate.now())
@@ -36,19 +38,26 @@ public class GetUserInformationUseCaseTest {
                         .username("test-username")
                         .build()
         ));
+        when(usersRepository.update(any())).thenReturn(User.builder()
+                .birthDayDate(LocalDate.now())
+                .email("test@email.com")
+                .isActive(true)
+                .username("test-username")
+                .build());
 
-        UserInformationDTO response = getUserInformationUseCase.execute(1L);
+        var response = updateUserInformationUseCase.execute(1L, UpdateUserInformationRequestDTO.builder().birthDayDate(LocalDate.now()).build());
 
         verify(usersRepository, times(1)).findById(anyLong());
-        assertNotNull(response);
+        verify(usersRepository, times(1)).update(any());
+
         assertInstanceOf(UserInformationDTO.class, response);
     }
 
     @Test
-    void givenInvalidId_whenGetUserInformationUseCase_thenThrowError() {
+    void givenInvalidId_whenUpdateUserInformation_thenThrowError() {
         when(usersRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(RecordNotFoundException.class, () -> getUserInformationUseCase.execute(1L));
+        assertThrows(RecordNotFoundException.class, () -> updateUserInformationUseCase.execute(1L, UpdateUserInformationRequestDTO.builder().birthDayDate(LocalDate.now()).build()));
 
         verify(usersRepository, times(1)).findById(anyLong());
     }

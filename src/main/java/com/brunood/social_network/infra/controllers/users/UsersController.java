@@ -4,11 +4,9 @@ import com.brunood.social_network.core.exception.response.standard.ResponseDTO;
 import com.brunood.social_network.core.exception.response.standard.ResponseType;
 import com.brunood.social_network.core.exception.response.standard.StandardResponse;
 import com.brunood.social_network.domain.user.application.dtos.AuthenticateRequestDTO;
+import com.brunood.social_network.domain.user.application.dtos.RefreshSessionDTO;
 import com.brunood.social_network.domain.user.application.dtos.UpdateUserInformationRequestDTO;
-import com.brunood.social_network.domain.user.application.usecases.AuthenticateUserUseCase;
-import com.brunood.social_network.domain.user.application.usecases.CreateUserUseCase;
-import com.brunood.social_network.domain.user.application.usecases.GetUserInformationUseCase;
-import com.brunood.social_network.domain.user.application.usecases.UpdateUserInformationUseCase;
+import com.brunood.social_network.domain.user.application.usecases.*;
 import com.brunood.social_network.domain.user.enterprise.entities.CreateUserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -20,17 +18,20 @@ import org.springframework.stereotype.Component;
 public class UsersController implements UsersResource {
     private final CreateUserUseCase createUserUseCase;
     private final AuthenticateUserUseCase authenticateUserUseCase;
+    private final RefreshUserSessionUseCase refreshUserSessionUseCase;
     private final GetUserInformationUseCase getUserInformationUseCase;
     private final UpdateUserInformationUseCase updateUserInformationUseCase;
 
     public UsersController(
             CreateUserUseCase createUserUseCase,
             AuthenticateUserUseCase authenticateUserUseCase,
+            RefreshUserSessionUseCase refreshUserSessionUseCase,
             GetUserInformationUseCase getUserInformationUseCase,
             UpdateUserInformationUseCase updateUserInformationUseCase
     ) {
         this.createUserUseCase = createUserUseCase;
         this.authenticateUserUseCase = authenticateUserUseCase;
+        this.refreshUserSessionUseCase = refreshUserSessionUseCase;
         this.getUserInformationUseCase = getUserInformationUseCase;
         this.updateUserInformationUseCase = updateUserInformationUseCase;
     }
@@ -54,6 +55,17 @@ public class UsersController implements UsersResource {
                 ResponseType.SUCCESS,
                 HttpStatus.OK,
                 this.authenticateUserUseCase.execute(data)
+        );
+    }
+
+    @Override
+    public ResponseEntity<ResponseDTO> refreshSession(RefreshSessionDTO data, HttpServletRequest httpServletRequest) {
+        return StandardResponse.generateResponse(
+                "authentication",
+                null,
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                this.refreshUserSessionUseCase.execute(data)
         );
     }
 

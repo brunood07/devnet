@@ -3,8 +3,10 @@ package com.brunood.social_network.unit.user;
 import com.brunood.social_network.core.exception.custom.BusinessException;
 import com.brunood.social_network.domain.user.application.dtos.AuthenticateRequestDTO;
 import com.brunood.social_network.domain.user.application.dtos.AuthenticateResponseDTO;
+import com.brunood.social_network.domain.user.application.repositories.RefreshTokensRepository;
 import com.brunood.social_network.domain.user.application.repositories.UsersRepository;
 import com.brunood.social_network.domain.user.application.usecases.AuthenticateUserUseCase;
+import com.brunood.social_network.infra.database.entities.RefreshToken;
 import com.brunood.social_network.infra.database.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,8 @@ public class AuthenticateUserUseCaseTest {
     @Mock
     private UsersRepository usersRepository;
     @Mock
+    private RefreshTokensRepository refreshTokensRepository;
+    @Mock
     private PasswordEncoder passwordEncoder;
     @InjectMocks
     private AuthenticateUserUseCase authenticateUserUseCase;
@@ -42,6 +46,7 @@ public class AuthenticateUserUseCaseTest {
     @Test
     void givenValidData_whenAuthenticateUser_thenReturnAccessToken() {
         when(usersRepository.findByEmail(anyString())).thenReturn(Optional.of(User.builder()
+                .id(1L)
                 .birthDayDate(LocalDate.now())
                 .createdAt(LocalDateTime.now())
                 .email("test@email.com")
@@ -50,6 +55,11 @@ public class AuthenticateUserUseCaseTest {
                 .username("testname")
                 .build()));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
+        when(refreshTokensRepository.createRefreshToken(any())).thenReturn(RefreshToken
+                .builder()
+                .token("test-refresh-token")
+                .build()
+        );
 
         AuthenticateResponseDTO response = authenticateUserUseCase.execute(
                 AuthenticateRequestDTO
@@ -61,6 +71,7 @@ public class AuthenticateUserUseCaseTest {
 
         verify(usersRepository, times(1)).findByEmail(anyString());
         verify(passwordEncoder, times(1)).matches(anyString(), anyString());
+        verify(refreshTokensRepository, times(1)).createRefreshToken(any());
 
         assertInstanceOf(AuthenticateResponseDTO.class, response);
         assertNotNull(response.getAccessToken());

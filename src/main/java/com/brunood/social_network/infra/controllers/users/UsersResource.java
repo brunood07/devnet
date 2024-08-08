@@ -2,6 +2,7 @@ package com.brunood.social_network.infra.controllers.users;
 
 import com.brunood.social_network.core.exception.response.standard.ResponseDTO;
 import com.brunood.social_network.domain.user.application.dtos.AuthenticateRequestDTO;
+import com.brunood.social_network.domain.user.application.dtos.RefreshSessionDTO;
 import com.brunood.social_network.domain.user.application.dtos.UpdateUserInformationRequestDTO;
 import com.brunood.social_network.domain.user.enterprise.entities.CreateUserDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,6 +20,9 @@ public interface UsersResource {
 
     @PostMapping("/session")
     ResponseEntity<ResponseDTO> signin(@Valid @RequestBody AuthenticateRequestDTO data, HttpServletRequest httpServletRequest);
+
+    @PostMapping("/session/refresh")
+    ResponseEntity<ResponseDTO> refreshSession(@Valid @RequestBody RefreshSessionDTO data, HttpServletRequest httpServletRequest);
 
     @GetMapping("/me")
     @SecurityRequirement(name = "jwt_auth")

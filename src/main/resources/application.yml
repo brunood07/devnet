@@ -19,6 +19,8 @@ spring:
 security:
   token:
     secret: '49c00d9a99ea63fdf270f6ca042f682a'
+  refresh:
+    expiry: '1'
 
 server:
   port: 8080

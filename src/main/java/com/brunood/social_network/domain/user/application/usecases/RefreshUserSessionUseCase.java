@@ -3,61 +3,56 @@ package com.brunood.social_network.domain.user.application.usecases;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.brunood.social_network.core.exception.custom.BusinessException;
-import com.brunood.social_network.domain.user.application.dtos.AuthenticateRequestDTO;
 import com.brunood.social_network.domain.user.application.dtos.AuthenticateResponseDTO;
 import com.brunood.social_network.domain.user.application.dtos.CreateRefreshTokenDTO;
+import com.brunood.social_network.domain.user.application.dtos.RefreshSessionDTO;
 import com.brunood.social_network.domain.user.application.repositories.RefreshTokensRepository;
-import com.brunood.social_network.domain.user.application.repositories.UsersRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class AuthenticateUserUseCase {
+public class RefreshUserSessionUseCase {
 
     @Setter
     @Value("${security.token.secret}")
     private String secretKey;
 
-    private final UsersRepository usersRepository;
-    private final PasswordEncoder passwordEncoder;
     private final RefreshTokensRepository refreshTokensRepository;
 
-    public AuthenticateUserUseCase(UsersRepository usersRepository, PasswordEncoder passwordEncoder, RefreshTokensRepository refreshTokensRepository) {
-        this.usersRepository = usersRepository;
-        this.passwordEncoder = passwordEncoder;
+    public RefreshUserSessionUseCase(RefreshTokensRepository refreshTokensRepository) {
         this.refreshTokensRepository = refreshTokensRepository;
     }
 
-    public AuthenticateResponseDTO execute(AuthenticateRequestDTO data) {
-        var user = this.usersRepository.findByEmail(data.email()).orElseThrow(() -> new BusinessException("400", "Invalid user"));
-        boolean passwordMatches = this.passwordEncoder.matches(data.password(), user.getPassword());
-        if (!passwordMatches) throw new BusinessException("400", "Invalid user");
+    public AuthenticateResponseDTO execute(RefreshSessionDTO data) {
+        var refreshTokenExists = this.refreshTokensRepository.findByRefreshToken(data.refreshToken());
+        if (refreshTokenExists == null) throw new BusinessException("401", "Invalid refresh token");
+        if (refreshTokenExists.getExpiryDate().isBefore(LocalDateTime.now())) throw new BusinessException("401", "Invalid refresh token");
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         var expiresIn = Instant.now().plus(Duration.ofMinutes(10));
         var token = JWT.create()
                 .withIssuer("devnet")
                 .withExpiresAt(expiresIn)
-                .withSubject(user.getId().toString())
+                .withSubject(refreshTokenExists.getUser().getId().toString())
                 .withClaim("roles", List.of("USER"))
                 .sign(algorithm);
 
-        var refreshToken = this.refreshTokensRepository.createRefreshToken(
+        var newRefreshToken = this.refreshTokensRepository.createRefreshToken(
                 CreateRefreshTokenDTO
                         .builder()
-                        .userId(user.getId())
+                        .userId(refreshTokenExists.getUser().getId())
                         .build());
 
         return AuthenticateResponseDTO.builder()
                 .accessToken(token)
                 .expiresIn(expiresIn.toEpochMilli())
-                .refreshToken(refreshToken.getToken())
+                .refreshToken(newRefreshToken.getToken())
                 .build();
     }
 }
