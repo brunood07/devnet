@@ -1,10 +1,9 @@
 package com.brunood.social_network.domain.user.enterprise.entities;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -12,12 +11,14 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @NoArgsConstructor
 @ToString
-public class CreateUserDTO {
+public class UserEntity {
 
-    @NotNull(message = "username cannot be null")
+    private Long id;
     private String username;
-    @Email
     private String email;
     private LocalDate birthDayDate;
     private String password;
+    private boolean isActive;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

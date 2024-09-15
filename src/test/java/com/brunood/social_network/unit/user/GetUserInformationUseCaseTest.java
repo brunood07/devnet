@@ -4,6 +4,7 @@ import com.brunood.social_network.core.exception.custom.RecordNotFoundException;
 import com.brunood.social_network.domain.user.application.dtos.UserInformationDTO;
 import com.brunood.social_network.domain.user.application.repositories.UsersRepository;
 import com.brunood.social_network.domain.user.application.usecases.GetUserInformationUseCase;
+import com.brunood.social_network.domain.user.enterprise.entities.UserEntity;
 import com.brunood.social_network.infra.database.entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,7 @@ public class GetUserInformationUseCaseTest {
     @Test
     void givenValidId_whenGetUserInformationUseCase_thenReturnUserInfo() {
         when(usersRepository.findById(anyLong())).thenReturn(Optional.of(
-                User.builder()
+                UserEntity.builder()
                         .birthDayDate(LocalDate.now())
                         .email("test@email.com")
                         .isActive(true)

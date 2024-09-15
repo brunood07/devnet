@@ -31,7 +31,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 return;
             }
 
-            request.setAttribute("client_id", token.getSubject());
+            request.setAttribute("user_id", token.getSubject());
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(), null);
 
             SecurityContextHolder.getContext().setAuthentication(auth);

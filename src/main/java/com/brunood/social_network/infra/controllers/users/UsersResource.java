@@ -1,10 +1,7 @@
 package com.brunood.social_network.infra.controllers.users;
 
 import com.brunood.social_network.core.exception.response.standard.ResponseDTO;
-import com.brunood.social_network.domain.user.application.dtos.AuthenticateRequestDTO;
-import com.brunood.social_network.domain.user.application.dtos.RefreshSessionDTO;
-import com.brunood.social_network.domain.user.application.dtos.UpdateUserInformationRequestDTO;
-import com.brunood.social_network.domain.user.enterprise.entities.CreateUserDTO;
+import com.brunood.social_network.domain.user.application.dtos.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

@@ -1,9 +1,9 @@
 package com.brunood.social_network.domain.user.application.usecases;
 
 import com.brunood.social_network.core.exception.custom.BusinessException;
+import com.brunood.social_network.domain.user.application.dtos.CreateUserDTO;
 import com.brunood.social_network.domain.user.application.dtos.CreateUserResponseDTO;
 import com.brunood.social_network.domain.user.application.repositories.UsersRepository;
-import com.brunood.social_network.domain.user.enterprise.entities.CreateUserDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

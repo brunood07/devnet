@@ -1,10 +1,11 @@
 package com.brunood.social_network.unit.user;
 
 import com.brunood.social_network.core.exception.custom.BusinessException;
+import com.brunood.social_network.domain.user.application.dtos.CreateUserDTO;
 import com.brunood.social_network.domain.user.application.dtos.CreateUserResponseDTO;
 import com.brunood.social_network.domain.user.application.repositories.UsersRepository;
 import com.brunood.social_network.domain.user.application.usecases.CreateUserUseCase;
-import com.brunood.social_network.domain.user.enterprise.entities.CreateUserDTO;
+import com.brunood.social_network.domain.user.enterprise.entities.UserEntity;
 import com.brunood.social_network.infra.database.entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +37,7 @@ public class CreateUserUseCaseTest {
         when(usersRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(anyString())).thenReturn("encoded-password");
         when(usersRepository.createUser(any())).thenReturn(
-                User.builder()
+                UserEntity.builder()
                         .birthDayDate(LocalDate.now())
                         .createdAt(LocalDateTime.now())
                         .email("test@email.com")
@@ -63,7 +64,7 @@ public class CreateUserUseCaseTest {
 
     @Test
     void givenValidDataAndUserAlreadyExists_whenCreateUser_thenThrowBusinessException() {
-        when(usersRepository.findByEmail(anyString())).thenReturn(Optional.of(User.builder()
+        when(usersRepository.findByEmail(anyString())).thenReturn(Optional.of(UserEntity.builder()
                 .birthDayDate(LocalDate.now())
                 .createdAt(LocalDateTime.now())
                 .email("test@email.com")

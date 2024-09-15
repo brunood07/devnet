@@ -6,6 +6,7 @@ import com.brunood.social_network.domain.user.application.dtos.AuthenticateRespo
 import com.brunood.social_network.domain.user.application.repositories.RefreshTokensRepository;
 import com.brunood.social_network.domain.user.application.repositories.UsersRepository;
 import com.brunood.social_network.domain.user.application.usecases.AuthenticateUserUseCase;
+import com.brunood.social_network.domain.user.enterprise.entities.UserEntity;
 import com.brunood.social_network.infra.database.entities.RefreshToken;
 import com.brunood.social_network.infra.database.entities.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,7 @@ public class AuthenticateUserUseCaseTest {
 
     @Test
     void givenValidData_whenAuthenticateUser_thenReturnAccessToken() {
-        when(usersRepository.findByEmail(anyString())).thenReturn(Optional.of(User.builder()
+        when(usersRepository.findByEmail(anyString())).thenReturn(Optional.of(UserEntity.builder()
                 .id(1L)
                 .birthDayDate(LocalDate.now())
                 .createdAt(LocalDateTime.now())

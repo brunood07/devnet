@@ -5,6 +5,7 @@ import com.brunood.social_network.domain.user.application.dtos.UpdateUserInforma
 import com.brunood.social_network.domain.user.application.dtos.UserInformationDTO;
 import com.brunood.social_network.domain.user.application.repositories.UsersRepository;
 import com.brunood.social_network.domain.user.application.usecases.UpdateUserInformationUseCase;
+import com.brunood.social_network.domain.user.enterprise.entities.UserEntity;
 import com.brunood.social_network.infra.database.entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,14 +32,14 @@ public class UpdateUserInformationUseCaseTest {
     @Test
     void givenValidParameters_whenUpdateUserInformation_thenReturnUpdatedUser() {
         when(usersRepository.findById(anyLong())).thenReturn(Optional.of(
-                User.builder()
+                UserEntity.builder()
                         .birthDayDate(LocalDate.now())
                         .email("test@email.com")
                         .isActive(true)
                         .username("test-username")
                         .build()
         ));
-        when(usersRepository.update(any())).thenReturn(User.builder()
+        when(usersRepository.update(any())).thenReturn(UserEntity.builder()
                 .birthDayDate(LocalDate.now())
                 .email("test@email.com")
                 .isActive(true)

@@ -1,13 +1,13 @@
 package com.brunood.social_network.domain.user.application.repositories;
 
-import com.brunood.social_network.domain.user.enterprise.entities.CreateUserDTO;
-import com.brunood.social_network.infra.database.entities.User;
+import com.brunood.social_network.domain.user.application.dtos.CreateUserDTO;
+import com.brunood.social_network.domain.user.enterprise.entities.UserEntity;
 
 import java.util.Optional;
 
 public interface UsersRepository {
-    User createUser(CreateUserDTO data);
-    Optional<User> findByEmail(String email);
-    Optional<User> findById(Long id);
-    User update(User data);
+    UserEntity createUser(CreateUserDTO data);
+    Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findById(Long id);
+    UserEntity update(UserEntity data);
 }
